@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LearnX — Demo 50-question Objective Test</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#ffffff; --primary:#4e54c8; --accent:#10b981; --muted:#6b7280;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:#0f172a}
+  .wrap{max-width:980px;margin:28px auto;padding:18px}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  h1{margin:0;font-size:20px;color:var(--primary)}
+  .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
+  .form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .form-row input,.form-row select{flex:1;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
+  label{display:block;font-size:13px;margin-bottom:6px;color:var(--muted)}
+  .btn{display:inline-block;padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.ghost{background:transparent;border:1px solid #e6e9ef}
+  .small{font-size:13px;color:var(--muted)}
+  .flex{display:flex;gap:10px;align-items:center}
+  .lang-switch{display:flex;gap:6px}
+  .lang-switch button{padding:6px 8px;border-radius:6px;border:1px solid #e6e9ef;background:#fff;cursor:pointer}
+  .exam-info{margin:12px 0;padding:12px;border-radius:8px;background:#f8fafc;border:1px solid #eef2ff}
+  .question-wrap{margin-top:12px}
+  .question-text{font-weight:600;margin-bottom:10px}
+  .options label{display:block;padding:10px;border-radius:8px;border:1px solid #eef2ff;margin-bottom:8px;cursor:pointer;background:#fff}
+  .options input{margin-right:8px}
+  .nav-questions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .nav-questions button{padding:6px 8px;border-radius:6px;border:1px solid #e6e9ef;background:#fff;cursor:pointer}
+  .nav-questions button.current{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .results .result-item{margin-bottom:12px;padding:12px;border-radius:8px;background:#fff;border:1px solid #eef2ff}
+  .correct{color:var(--accent);font-weight:700}
+  .wrong{color:#ef4444;font-weight:700}
+  .center{text-align:center}
+  footer{margin-top:18px;font-size:13px;color:var(--muted);text-align:center}
+  @media (max-width:720px){
+    .form-row{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <h1>LearnX — Demo Objective Test</h1>
+      <div class="lang-switch" id="langSwitch">
+        <!-- language buttons inserted by JS -->
+      </div>
+    </header>
+
+    <!-- Sign in card -->
+    <section id="signinSection" class="card">
+      <h2 style="margin-top:0">Sign in & choose exam</h2>
+      <div class="small">Enter your details. The test will be generated from LearnX's demo question bank. Questions and explanations are shown in English in this demo; UI can be switched to other languages.</div>
+      <div style="height:12px"></div>
+
+      <div class="form-row">
+        <div style="flex:1">
+          <label for="nameLabel" id="lbl-name">Name</label>
+          <input id="nameInput" type="text" placeholder="Your full name" />
+        </div>
+        <div style="flex:1">
+          <label for="classInput" id="lbl-class">Class</label>
+          <input id="classInput" type="text" placeholder="e.g., SSS 3 / Grade 12" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div style="flex:1">
+          <label id="lbl-email">Email</label>
+          <input id="emailInput" type="email" placeholder="you@example.com" />
+        </div>
+        <div style="flex:1">
+          <label id="lbl-exam">Exam (choose)</label>
+          <select id="examSelect">
+            <!-- exams, you can customize list -->
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+        <button class="btn primary" id="startTestBtn">Start 50-question test</button>
+        <button class="btn ghost" id="previewBtn">Preview question bank</button>
+        <div style="margin-left:auto" class="small" id="langNote">UI language only in demo; questions in English.</div>
+      </div>
+    </section>
+
+    <!-- Test area (hidden until start) -->
+    <section id="testSection" class="card" style="display:none;margin-top:14px">
+      <div class="exam-info" id="examInfo"></div>
+
+      <div class="question-wrap" id="questionWrap">
+        <!-- question content inserted here -->
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+        <button class="btn ghost" id="prevBtn">Previous</button>
+        <button class="btn ghost" id="nextBtn">Next</button>
+        <div style="margin-left:auto" class="small">Answered: <span id="answeredCount">0</span> / 50</div>
+      </div>
+
+      <div class="nav-questions" id="navQuestions"></div>
+
+      <div style="margin-top:12px" class="center">
+        <button class="btn primary" id="submitBtn">Submit Test & See Answers</button>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="resultsSection" style="display:none;margin-top:14px">
+      <div class="card results" id="resultsCard">
+        <h2 style="margin-top:0">Results</h2>
+        <div id="summary"></div>
+        <div id="answersList" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <footer>Demo prototype — replace demo question bank with official exam syllabi content for production.</footer>
+  </div>
+
+<script>
+/* =========================
+   LANGUAGE PACK (UI only)
+   Add more translations here if you like.
+   ========================= */
+const LANGS = {
+  en: { name:'EN', start:'Start 50-question test', preview:'Preview question bank', nameLbl:'Name', classLbl:'Class', emailLbl:'Email', examLbl:'Exam (choose)', answered:'Answered', submit:'Submit Test & See Answers', uiNote:'UI language only in demo; questions in English.', welcome:'Welcome' },
+  fr: { name:'FR', start:'Commencer le test de 50 questions', preview:'Aperçu des questions', nameLbl:'Nom', classLbl:'Classe', emailLbl:'E-mail', examLbl:'Examen (choisir)', answered:'Répondu', submit:'Soumettre le test et voir les réponses', uiNote:'Interface en français; questions en anglais (démo).', welcome:'Bienvenue' },
+  pt: { name:'PT', start:'Iniciar teste de 50 perguntas', preview:'Visualizar perguntas', nameLbl:'Nome', classLbl:'Classe', emailLbl:'Email', examLbl:'Exame (escolher)', answered:'Respondido', submit:'Enviar teste e ver respostas', uiNote:'Interface em Português; perguntas em inglês (demo).', welcome:'Bem-vindo' },
+  sw: { name:'SW', start:'Anza mtihani wa maswali 50', preview:'Angalia orodha ya maswali', nameLbl:'Jina', classLbl:'Darasa', emailLbl:'Barua pepe', examLbl:'Mtihani (chagua)', answered:'Imejibiwa', submit:'Wasilisha mtihani na ona majibu', uiNote:'Tovuti kwa lugha; maswali kwa Kiingereza (demo).', welcome:'Karibu' },
+  ar: { name:'AR', start:'ابدأ الاختبار المكون من 50 سؤالًا', preview:'عرض بنك الأسئلة', nameLbl:'الاسم', classLbl:'الصف', emailLbl:'البريد الإلكتروني', examLbl:'الامتحان (اختر)', answered:'تم الإجابة', submit:'إرسال الاختبار وعرض الإجابات', uiNote:'واجهة بالعربية؛ الأسئلة بالإنجليزية (عرض تجريبي).', welcome:'مرحباً' },
+  zu: { name:'ZU', start:'Qala ukuhlolwa kwemibuzo engu-50', preview:'Buka imibuzo', nameLbl:'Igama', classLbl:'Ikilasi', emailLbl:'I-imeyili', examLbl:'Uhlolo (khetha)', answered:'Impendulo', submit:'Thumela ukuhlolwa ubone izimpendulo', uiNote:'UI ngolimi; imibuzo nge-English (isampula).', welcome:'Siyakwamukela' },
+  am: { name:'AM', start:'50 ጥያቄ ፈተና ጀምር', preview:'የጥያቄዎች እይታ', nameLbl:'ስም', classLbl:'ክፍል', emailLbl:'ኢሜይል', examLbl:'ፈተና (ይምረጡ)', answered:'የመለሱ', submit:'ፈተናን አስገባ መልሶችን እይ', uiNote:'የአማርኛ ቅጥያ ፣ ጥያቄዎች በእንግሊዝኛ (ሙከራ).', welcome:'እንኳን ደህና መጡ' }
+};
+
+// default language
+let currentLang = 'en';
+
+function renderLangButtons(){
+  const container = document.getElementById('langSwitch');
+  container.innerHTML = '';
+  for(const k of Object.keys(LANGS)){
+    const b = document.createElement('button');
+    b.textContent = LANGS[k].name;
+    b.onclick = ()=> { setLang(k); };
+    if(k===currentLang) b.style.outline='2px solid #cbd5e1';
+    container.appendChild(b);
+  }
+}
+function setLang(lang){
+  currentLang = lang;
+  const L = LANGS[lang];
+  document.getElementById('startTestBtn').textContent = L.start;
+  document.getElementById('previewBtn').textContent = L.preview;
+  document.getElementById('lbl-name').textContent = L.nameLbl;
+  document.getElementById('lbl-class').textContent = L.classLbl;
+  document.getElementById('lbl-email').textContent = L.emailLbl;
+  document.getElementById('lbl-exam').textContent = L.examLbl;
+  document.getElementById('langNote').textContent = L.uiNote;
+  document.getElementById('submitBtn').textContent = L.submit;
+  // update any "Answered" label
+  document.querySelectorAll('.small').forEach(n=>{
+    // only update the one that shows answered label
+    if(n.id==='') return;
+  });
+  renderLangButtons();
+}
+renderLangButtons();
+setLang('en');
+
+/* =========================
+   Exams list (from your earlier list)
+   Provide mapping exam -> region for badge strings
+   ========================= */
+const EXAMS = [
+  { key:'waec', label:'WAEC (WASSCE)', region:'West Africa' },
+  { key:'neco', label:'NECO', region:'West Africa' },
+  { key:'jamb', label:'UTME (JAMB)', region:'West Africa' },
+  { key:'baccalaureat', label:'Baccalauréat', region:'North & Francophone Africa' },
+  { key:'bece', label:'BECE', region:'West Africa' },
+  { key:'kcse', label:'KCSE', region:'East Africa (Kenya)' },
+  { key:'kcpe', label:'KCPE', region:'East Africa (Kenya)' },
+  { key:'uce', label:'UCE', region:'East Africa (Uganda)' },
+  { key:'uace', label:'UACE', region:'East Africa (Uganda)' },
+  { key:'csee', label:'CSEE', region:'Tanzania' },
+  { key:'acsee', label:'ACSEE', region:'Tanzania' },
+  { key:'rwanda', label:'Senior 6 National Exams', region:'Rwanda' },
+  { key:'eheee', label:'EHEEE', region:'Ethiopia' },
+  { key:'nsc', label:'NSC (Matric)', region:'South Africa' },
+  { key:'zimsec', label:'ZIMSEC A-Level', region:'Zimbabwe' },
+  { key:'eg_thanaweya', label:'Thanaweya Amma', region:'Egypt' },
+  { key:'cambridge', label:'Cambridge (IGCSE & A-Levels)', region:'International' },
+  { key:'examen_nacional', label:'Exame Nacional', region:'Mozambique' },
+  { key:'ecz', label:'ECZ Grade 12', region:'Zambia' },
+  { key:'others', label:'Other / International', region:'International' }
+];
+
+// fill exam select
+const examSelect = document.getElementById('examSelect');
+EXAMS.forEach(ex=>{
+  const o = document.createElement('option');
+  o.value = ex.key;
+  o.textContent = `${ex.label} — ${ex.region}`;
+  examSelect.appendChild(o);
+});
+
+/* =========================
+   DEMO QUESTION BANK
+   For demo we include 5 subject banks (Math, English, Chemistry, Physics, Biology).
+   Each question: { id, subject, q, options:[], correct: index, explanation }
+   (All text in English in this demo.)
+   You can expand/replace these with official exam questions.
+   ========================= */
+
+const QUESTION_BANK = [];
+
+/* Helper to push many questions quickly */
+function pushQ(subject, q, options, correct, explanation){
+  QUESTION_BANK.push({ id: 'q'+(QUESTION_BANK.length+1), subject, q, options, correct, explanation });
+}
+
+/* --- Mathematics (15) --- */
+pushQ('Mathematics','What is the value of x if 2x+3=11?',['3','4','5','6'],1,'2x+3=11 → 2x=8 → x=4.');
+pushQ('Mathematics','If f(x)=x^2, what is f(3)?',['6','9','3','12'],1,'f(3)=3^2=9.');
+pushQ('Mathematics','Solve: 5(2x-1)=45',['3','4','5','6'],2,'5(2x-1)=45 → 2x-1=9 →2x=10 → x=5.');
+pushQ('Mathematics','What is the perimeter of a square with side 7?',['14','21','28','49'],2,'Perimeter = 4×side = 4×7 = 28.');
+pushQ('Mathematics','What is 15% of 200?',['20','25','30','35'],2,'15% of 200 = 0.15×200 = 30.');
+pushQ('Mathematics','What is the area of a triangle with base 10 and height 6?',['30','60','16','40'],0,'Area = ½×base×height = 0.5×10×6 = 30.');
+pushQ('Mathematics','Simplify: (3x)(4x)',['7x','12x^2','12x','7x^2'],1,'(3x)(4x)=12x^2.');
+pushQ('Mathematics','Value of √49 is?',['5','6','7','8'],2,'√49 = 7.');
+pushQ('Mathematics','If angles in a triangle are 50° and 60°, the third angle is:',['60°','70°','80°','90°'],1,'Sum of angles=180 → third=180-50-60=70°.');
+pushQ('Mathematics','What is 7 × 8?',['54','56','58','60'],1,'7×8=56.');
+pushQ('Mathematics','What is the mean of [2,4,6,8]?',['4','5','6','20'],1,'Mean = (2+4+6+8)/4 = 20/4 = 5.');
+pushQ('Mathematics','What is 2^5?',['8','16','32','64'],2,'2^5=32.');
+pushQ('Mathematics','Convert fraction 3/4 to decimal:',['0.25','0.5','0.75','0.8'],2,'3/4 = 0.75.');
+pushQ('Mathematics','Solve for x: x/3 = 7',['10','21','24','3'],1,'x/3=7 → x=21.');
+pushQ('Mathematics','What is the greatest common divisor of 12 and 18?',['2','3','6','12'],2,'GCD of 12 and 18 is 6.');
+
+/* --- English (15) --- */
+pushQ('English','Choose the correct plural: “child”',['childs','children','childes','childer'],1,'The plural of child is children.');
+pushQ('English','Which is a noun?',['Run','Happy','City','Quickly'],2,'“City” is a noun (place).');
+pushQ('English','Choose correct tense: "She ___ to school yesterday."',['goes','went','gone','going'],1,'Past tense: she went to school.');
+pushQ('English','Which word is an adjective?',['Blue','Swim','Run','Happily'],0,'Adjectives describe nouns: "blue".');
+pushQ('English','Pick the correct article: “___ apple”',['A','An','The','No article'],1,'“An apple” because apple starts with vowel sound.');
+pushQ('English','Synonym of "big"',['tiny','large','small','short'],1,'"Large" is a synonym of "big".');
+pushQ('English','Antonym of "hot"',['warm','cold','boiling','heated'],1,'"Cold" is opposite of hot.');
+pushQ('English','Complete: He is the ___ student in the class.',['smart','smarter','smartest','most smart'],2,'Superlative: "smartest".');
+pushQ('English','Which is a pronoun?',['Table','They','Blue','Quick'],1,'"They" is a pronoun.');
+pushQ('English','Which is correct?',['Its raining','It\'s raining','Its\' raining','It raining'],1,'"It\'s raining" = It is raining.');
+pushQ('English','Choose the correct preposition: "She is good ___ math."',['in','at','on','for'],1,'"Good at math."');
+pushQ('English','Identify the verb: "The cat sleeps on the mat."',['cat','sleeps','mat','on'],1,'Verb is "sleeps" – action/state.');
+pushQ('English','Pick the correctly punctuated sentence:',['Whats your name?','What is your name','What\'s your name?','Whats your name'],2,'Contraction with apostrophe and question mark.');
+pushQ('English','Which sentence is past perfect?',['She had eaten','She eats','She will eat','She is eating'],0,'Past perfect: had + past participle.');
+pushQ('English','Choose the correct comparative: "good" → ?',['gooder','better','more good','best'],1,'"Better" is comparative of good.');
+
+/* --- Chemistry (15) --- */
+pushQ('Chemistry','Water\'s chemical formula is:',['H2O','CO2','O2','H2'],0,'Water = H₂O: two hydrogen and one oxygen.');
+pushQ('Chemistry','pH less than 7 indicates:',['Neutral','Acidic','Basic','Alkaline'],1,'pH < 7 = acidic.');
+pushQ('Chemistry','Atomic number indicates:',['Neutrons','Electrons','Protons','Mass number'],2,'Atomic number = number of protons.');
+pushQ('Chemistry','Salt plus water is formed by:',['Oxidation','Neutralization','Reduction','Precipitation'],1,'Acid + base → salt + water (neutralization).');
+pushQ('Chemistry','The periodic table arranges elements by:',['Atomic mass','Alphabet','Atomic number','Density'],2,'Arranged by atomic number.');
+pushQ('Chemistry','Common state of matter at STP:',['Liquid','Gas','Plasma','Solid'],3,'Many elements are solids at STP; solids are common state.');
+pushQ('Chemistry','Which gas is produced in photosynthesis?',['CO2','O2','N2','H2'],1,'Photosynthesis produces oxygen (O₂).');
+pushQ('Chemistry','Electrolysis splits water into:',['H2 and O2','CO2 and O2','H2O2','NaCl'],0,'Electrolysis of water → hydrogen and oxygen gases.');
+pushQ('Chemistry','pH of neutral solution is:',['0','7','14','1'],1,'Neutral pH = 7.');
+pushQ('Chemistry','Which is an alkali metal?',['Oxygen','Sodium','Chlorine','Carbon'],1,'Sodium is an alkali metal (group 1).');
+pushQ('Chemistry','Valency of Oxygen commonly is:',['1','2','3','4'],1,'Oxygen commonly has valency 2.');
+pushQ('Chemistry','Which is a compound?',['O2','N2','H2O','He'],2,'H₂O (water) is a compound.');
+pushQ('Chemistry','Acid that gives sea a sour taste is:',['Sulfuric acid','Hydrochloric acid','Acetic acid','Carbonic acid'],3,'Carbonic acid from dissolved CO₂ contributes to sourness.');
+pushQ('Chemistry','Indicator that turns pink in base:',['Litmus','Phenolphthalein','Methyl orange','Bromothymol blue'],1,'Phenolphthalein is colorless in acid and pink in base.');
+pushQ('Chemistry','What is the mole unit used to measure?',['Mass','Amount of substance','Volume','Density'],1,'Mole measures amount of substance.');
+
+/* --- Physics (15) --- */
+pushQ('Physics','Ohm\'s law relates V, I and R as:',['V=IR','P=IV','E=mc2','F=ma'],0,'Ohm’s law: V = I × R.');
+pushQ('Physics','Unit of force is:',['Joule','Newton','Watt','Pascal'],1,'Force unit is Newton (N).');
+pushQ('Physics','Acceleration due to gravity (approx) near Earth surface:',['9.8 m/s^2','1 m/s^2','98 m/s^2','0.98 m/s^2'],0,'g ≈ 9.8 m/s².');
+pushQ('Physics','If mass=2kg and acceleration=3m/s^2, force = ?',['5N','6N','3N','2N'],1,'F=ma → 2×3=6 N.');
+pushQ('Physics','Speed is distance over:',['time','mass','force','area'],0,'Speed = distance / time.');
+pushQ('Physics','Light travels fastest in:',['vacuum','water','glass','air'],0,'Light is fastest in vacuum.');
+pushQ('Physics','Energy unit is:',['Newton','Joule','Watt','Pascal'],1,'Energy measured in Joules (J).');
+pushQ('Physics','A simple machine:',['Lever','Battery','Circuit','Transistor'],0,'Lever is a simple machine.');
+pushQ('Physics','Sound is a:',['electromagnetic wave','mechanical wave','particle','light'],1,'Sound is a mechanical wave requiring a medium.');
+pushQ('Physics','Frequency measured in:',['Hz','m','s','N'],0,'Frequency unit = Hertz (Hz).');
+pushQ('Physics','Power equals:',['Work × Time','Work / Time','Force × Distance','Energy × Time'],1,'Power = Work / Time.');
+pushQ('Physics','Unit of electric current:',['Volt','Ohm','Ampere','Coulomb'],2,'Current unit is Ampere (A).');
+pushQ('Physics','Which is scalar?',['Velocity','Force','Speed','Acceleration'],2,'Speed is scalar (no direction).');
+pushQ('Physics','Mirror that can form magnified upright image:',['Plane mirror','Concave mirror','Convex mirror','None'],1,'Concave mirror can form magnified upright image when object is close.');
+pushQ('Physics','If object moves in circle at constant speed, acceleration is:',['0','Toward centre','Away from centre','Tangential'],1,'Centripetal acceleration points toward centre.');
+
+/* --- Biology (15) --- */
+pushQ('Biology','Photosynthesis primarily occurs in:',['Root','Stem','Leaf','Flower'],2,'Photosynthesis occurs in leaves (chloroplasts).');
+pushQ('Biology','Basic unit of life is:',['Organ','Cell','Tissue','Organ system'],1,'Cell is basic unit of life.');
+pushQ('Biology','DNA stands for:',['Deoxyribonucleic acid','Ribonucleic acid','Deoxyribonitric acid','None'],0,'DNA = Deoxyribonucleic Acid.');
+pushQ('Biology','Which organelle is called powerhouse?',['Ribosome','Mitochondria','Nucleus','Golgi'],1,'Mitochondria generate ATP; "powerhouse".');
+pushQ('Biology','Blood cells that carry oxygen:',['White cells','Red cells','Platelets','Plasma'],1,'Red blood cells carry oxygen (haemoglobin).');
+pushQ('Biology','Process of cell division for growth:',['Meiosis','Mitosis','Fertilization','Osmosis'],1,'Mitosis produces identical daughter cells for growth.');
+pushQ('Biology','Plants store food as:',['Protein','Starch','Fat','Cellulose'],1,'Plants often store energy as starch.');
+pushQ('Biology','Which is a mammal?',['Frog','Shark','Whale','Crocodile'],2,'Whale is a mammal.');
+pushQ('Biology','Vaccines help the body produce:',['Antibodies','Viruses','Toxins','Antigens'],0,'Vaccines stimulate antibody production.');
+pushQ('Biology','Which part senses stimuli?',['Muscles','Nerves','Bones','Skin'],1,'Nerves (nervous system) sense and transmit stimuli.');
+pushQ('Biology','Primary producers in ecosystem are:',['Consumers','Decomposers','Producers','Parasites'],2,'Producers (plants/algae) produce organic matter.');
+pushQ('Biology','Type of reproduction producing genetically identical offspring:',['Sexual','Asexual','Cross','Hybrid'],1,'Asexual reproduction produces clones (identical).');
+pushQ('Biology','Which organ filters blood?',['Liver','Kidney','Lung','Heart'],1,'Kidneys filter blood to produce urine.');
+pushQ('Biology','Human heart has how many chambers?',['2','3','4','5'],2,'Human heart has 4 chambers.');
+pushQ('Biology','Which gas is required for cellular respiration?',['O2','CO2','N2','H2'],0,'Oxygen (O₂) is required for aerobic respiration.');
+
+/* ==============
+   Test generation & UI logic
+   ============== */
+
+const TOTAL_QUESTIONS = 50;
+let testQuestions = []; // will hold chosen 50
+let userAnswers = {};   // { qid: selectedIndex }
+let currentIndex = 0;
+let userInfo = {}; // name,class,email,exam
+
+// pick random questions from QUESTION_BANK mixing subjects
+function buildTest(selectedExamKey){
+  // For the demo, selection of exam doesn't change question pool,
+  // but you could map exam -> subjects and narrow bank.
+  // We'll sample randomly across all subjects.
+  const pool = QUESTION_BANK.slice(); // copy
+  // shuffle pool
+  for(let i=pool.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
+  }
+  testQuestions = pool.slice(0, TOTAL_QUESTIONS);
+  // ensure uniqueness (pool large enough)
+  userAnswers = {};
+  currentIndex = 0;
+}
+
+// render question UI
+function renderQuestion(i){
+  const q = testQuestions[i];
+  const wrap = document.getElementById('questionWrap');
+  document.getElementById('examInfo').innerHTML = `
+    <div><strong>${LANGS[currentLang].welcome}:</strong> ${userInfo.name || ''} — ${userInfo.class || ''} — <em>${getExamLabel(userInfo.exam)}</em></div>
+    <div style="margin-top:8px" class="small">Question ${i+1} of ${TOTAL_QUESTIONS}</div>
+  `;
+  let html = `<div><div class="question-text">${q.q}</div>`;
+  html += `<div class="options">`;
+  q.options.forEach((opt, idx)=>{
+    const checked = (userAnswers[q.id]===idx)?'checked':'';
+    html += `<label><input type="radio" name="${q.id}" value="${idx}" ${checked}/> ${opt}</label>`;
+  });
+  html += `</div></div>`;
+  wrap.innerHTML = html;
+
+  // add change listeners
+  wrap.querySelectorAll('input[type=radio]').forEach(input=>{
+    input.addEventListener('change', (e)=>{
+      userAnswers[q.id] = parseInt(e.target.value,10);
+      updateAnsweredCount();
+      renderNavButtons();
+    });
+  });
+
+  renderNavButtons();
+}
+
+// render nav buttons & set current highlight
+function renderNavButtons(){
+  const nav = document.getElementById('navQuestions');
+  nav.innerHTML = '';
+  testQuestions.forEach((q, idx)=>{
+    const b = document.createElement('button');
+    b.textContent = idx+1;
+    b.className = (idx===currentIndex)?'current':'';
+    b.onclick = ()=>{ currentIndex = idx; renderQuestion(idx); };
+    if(userAnswers[q.id]!==undefined) b.style.borderColor = 'var(--primary)';
+    nav.appendChild(b);
+  });
+  document.getElementById('answeredCount').textContent = Object.keys(userAnswers).length;
+}
+
+// helpers
+function getExamLabel(key){
+  const ex = EXAMS.find(e=>e.key===key);
+  return ex? `${ex.label} — ${ex.region}` : key;
+}
+
+/* BUTTONS */
+document.getElementById('startTestBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('nameInput').value.trim();
+  const cls = document.getElementById('classInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const exam = document.getElementById('examSelect').value;
+  if(!name || !email || !cls){ alert('Please fill name, class and email'); return; }
+  userInfo = { name, class:cls, email, exam };
+  buildTest(exam);
+  document.getElementById('signinSection').style.display='none';
+  document.getElementById('testSection').style.display='block';
+  renderQuestion(0);
+});
+
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+  if(currentIndex>0) currentIndex--; renderQuestion(currentIndex);
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  if(currentIndex < testQuestions.length-1) currentIndex++; renderQuestion(currentIndex);
+});
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  if(!confirm('Submit test? You will see answers and explanations.')) return;
+  showResults();
+});
+
+/* Preview question bank button */
+document.getElementById('previewBtn').addEventListener('click', ()=>{
+  const list = QUESTION_BANK.slice(0,40).map((q,i)=>`${i+1}. [${q.subject}] ${q.q}`).join('\n\n');
+  alert('Sample questions from bank (first 40):\n\n'+list);
+});
+
+/* show results with explanations */
+function showResults(){
+  // grade
+  let correct = 0;
+  const answersHtml = [];
+  testQuestions.forEach((q, idx)=>{
+    const selected = userAnswers[q.id];
+    const isCorrect = (selected===q.correct);
+    if(isCorrect) correct++;
+    // build result item
+    const item = document.createElement('div');
+    item.className = 'result-item';
+    item.innerHTML = `
+      <div><strong>Q${idx+1} [${q.subject}]</strong></div>
+      <div style="margin-top:6px">${q.q}</div>
+      <div style="margin-top:8px"><strong>Your answer:</strong> ${selected===undefined?'<em>Not answered</em>': q.options[selected]}</div>
+      <div style="margin-top:6px"><strong>Correct answer:</strong> <span class="${isCorrect?'correct':'wrong'}">${q.options[q.correct]}</span></div>
+      <div style="margin-top:8px"><strong>Explanation:</strong> <div style="margin-top:6px">${q.explanation}</div></div>
+    `;
+    answersHtml.push(item);
+  });
+
+  // show summary & answers
+  document.getElementById('testSection').style.display='none';
+  document.getElementById('resultsSection').style.display='block';
+  const summary = document.getElementById('summary');
+  summary.innerHTML = `<div class="center"><h3>Score: ${correct} / ${testQuestions.length} (${Math.round(correct/testQuestions.length*100)}%)</h3><div class="small">Name: ${userInfo.name} • Class: ${userInfo.class} • Exam: ${getExamLabel(userInfo.exam)}</div></div>`;
+  const answersList = document.getElementById('answersList');
+  answersList.innerHTML = '';
+  answersHtml.forEach(n=>answersList.appendChild(n));
+}
+
+/* update answered count initially */
+function updateAnsweredCount(){ document.getElementById('answeredCount').textContent = Object.keys(userAnswers).length; }
+
+/* ================
+   Note on translations (questions & explanations)
+   ================
+   This demo translates the UI. If you want to translate the question texts and explanations
+   into the other languages, add translation entries per question inside the QUESTION_BANK
+   objects, e.g.:
+
+   { id:'q1', subject:'Mathematics', q: 'What is 2+2?', translations: { fr: 'Quel est 2+2?', sw:'...' }, options: [...], explanation: '...' }
+
+   and then modify renderQuestion() to display q.translations[currentLang] when available.
+
+   Because high-quality translations for many items are time-consuming and sometimes need review,
+   this demo keeps Q & A in English but is structured so you can add translations later.
+   ================ */
+
+</script>
+</body>
+</html>

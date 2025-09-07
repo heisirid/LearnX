@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnX Referral System</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f8fafc; padding:20px; }
+    .card { background:#fff; padding:16px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.1); margin-bottom:20px; }
+    .btn { padding:8px 12px; background:#4e54c8; color:white; border:none; border-radius:5px; cursor:pointer; }
+    .btn:disabled { background:#ccc; cursor:not-allowed; }
+    .code { background:#f1f5f9; padding:6px 10px; border-radius:6px; font-weight:bold; display:inline-block; }
+  </style>
+</head>
+<body>
+
+  <!-- Referral Dashboard -->
+  <div class="card">
+    <h2>Referral Dashboard</h2>
+    <p>Hello, <span id="username"></span> 👋</p>
+    <p>Share your unique link with friends:</p>
+    <p class="code" id="refLink"></p>
+    <button class="btn" onclick="copyLink()">Copy Link</button>
+  </div>
+
+  <!-- Reward Section -->
+  <div class="card">
+    <h2>Your Rewards</h2>
+    <p id="rewardMessage">No rewards yet. Refer a friend to get 10% off!</p>
+  </div>
+
+  <script>
+    // Simulated logged-in user with a unique referral code
+    const loggedInUser = {
+      username: "student" + Math.floor(Math.random() * 1000),
+      referralCode: "REF-" + Math.random().toString(36).substring(2, 8).toUpperCase()
+    };
+
+    // Show user details
+    document.getElementById("username").innerText = loggedInUser.username;
+
+    // Generate referral link
+    const referralLink = window.location.origin + "///C:/Users/Xlite/Documents/signup.l.html?ref=" + loggedInUser.referralCode;
+    document.getElementById("refLink").innerText = referralLink;
+
+    // Copy to clipboard
+    function copyLink() {
+      navigator.clipboard.writeText(referralLink);
+      alert("Referral link copied!");
+    }
+
+    // Check if the current page was visited with a referral
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get("ref");
+
+    if (ref) {
+      // Simulate a signup using referral
+      localStorage.setItem("referredBy", ref);
+    }
+
+    // Reward unlock if someone signed up with your code
+    const referredBy = localStorage.getItem("referredBy");
+    if (referredBy === loggedInUser.referralCode) {
+      document.getElementById("rewardMessage").innerHTML = 
+        `🎉 Congrats! Your friend signed up. Use code <span class="code">LEARNX10</span> for 10% off.`;
+    }
+  </script>
+
+</body>
+</html>

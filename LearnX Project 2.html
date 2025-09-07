@@ -1,0 +1,384 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnX – Exam Prep for Africa</title>
+  <style>
+    :root{
+      --brand:#4e54c8; --brand-2:#8f94fb; --ink:#1f2937; --muted:#6b7280; --bg:#f8fafc; --card:#ffffff; --accent:#10b981; --warn:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1080px;margin:0 auto;padding:0 16px}
+    header{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+    .logo{font-weight:800;letter-spacing:.3px}
+    nav a{margin:0 10px;opacity:.95}
+    nav a:hover{opacity:1;text-decoration:underline}
+    .hero{padding:72px 0;text-align:center}
+    .hero h1{font-size:40px;margin:0 0 10px}
+    .hero p{opacity:.95;margin:0 auto 16px;max-width:700px}
+    .btn{display:inline-block;background:#fff;color:#111;padding:12px 18px;border-radius:999px;font-weight:600}
+    .btn.primary{background:var(--accent);color:#fff}
+    .grid{display:grid;gap:16px}
+    .features{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+    .card{background:var(--card);border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:18px}
+    .card h3{margin:4px 0 8px}/* Sections */
+section{padding:56px 0}
+.section-title{font-size:28px;margin:0 0 10px}
+.muted{color:var(--muted)}
+
+/* Courses */
+.subjects{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(78,84,200,.12);color:#3f46c6;font-weight:600;font-size:12px}
+
+/* Lesson Viewer */
+.lesson-wrap{display:grid;grid-template-columns:280px 1fr;gap:16px}
+.lesson-list{max-height:380px;overflow:auto}
+.lesson-item{padding:10px;border-radius:10px;cursor:pointer}
+.lesson-item:hover{background:#eef2ff}
+.lesson-item.active{background:#e0e7ff}
+.lesson-content{min-height:380px}
+
+/* Quiz Center */
+.quiz-q{margin:8px 0 4px}
+.quiz-options label{display:block;margin:6px 0;padding:8px;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer}
+.quiz-options input{margin-right:8px}
+.quiz-result{margin-top:10px;font-weight:700}
+
+/* AI Tutor */
+.chat{display:grid;grid-template-rows:1fr auto;height:420px}
+.chat-log{background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:12px;overflow:auto}
+.bubble{max-width:70%;padding:10px 12px;border-radius:14px;margin:6px 0}
+.bubble.user{background:#e0e7ff;margin-left:auto}
+.bubble.ai{background:#ecfeff;border:1px solid #cffafe}
+.chat-input{display:flex;gap:8px;margin-top:10px}
+.chat-input input{flex:1;padding:12px;border-radius:999px;border:1px solid #e5e7eb}
+.chat-input button{padding:12px 16px;border-radius:999px;border:0;background:var(--brand);color:#fff;font-weight:700}
+
+/* Dashboard */
+.kpis{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.kpi h4{margin:4px 0 6px}
+.bar{height:10px;background:#eef2ff;border-radius:999px;overflow:hidden}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+ 
+/* ONLY h3 inside Features */
+.features .card h3 {
+  color:#000000; /* bright orange */
+}
+
+/* Clickable last card */
+.features .card.link-card { cursor:pointer; transition:.2s; }
+.features .card.link-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 6px 16px rgba(0,0,0,0.12);
+}
+.features .card.link-card a {
+  display:block; text-decoration:none; color:inherit;
+}
+
+/* Hamburger */
+.hamburger {
+  display:none;
+  flex-direction:column;
+  cursor:pointer;
+  gap:5px;
+}
+.hamburger span {
+  width:25px; height:3px; background:white; border-radius:2px;
+}
+@media (max-width:768px){
+  nav { display:none; flex-direction:column; background:var(--brand); position:absolute; top:60px; right:10px; padding:10px; border-radius:8px; }
+  nav.show { display:flex; }
+  .hamburger { display:flex; }
+}
+
+/* Footer */
+footer{background:#111;color:#e5e7eb;padding:28px 0;margin-top:24px}
+.footgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
+.copyright{margin-top:12px;color:#9ca3af}
+
+@media (max-width:880px){
+  .lesson-wrap{grid-template-columns:1fr}
+  .footgrid{grid-template-columns:1fr}
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <div class="logo">LearnX</div>
+      <nav id="navMenu">
+        <a href="#lessons">Lessons</a>
+        <a href="#quiz">Practice Tests</a>
+        <a href="#pricing">Pricing</a>
+        <a href="about.l.html">About</a>
+      </nav>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="container hero">
+      <h1>Smarter Exam Prep for African Students</h1>
+      <p>Structured lessons, auto-graded practice tests, and a tutor — built for all African Exams.</p>
+      <div style="margin-top:10px">
+        <a class="btn primary" href="signup.l.html">Start Today!</a>
+        <a class="btn" href="courses.l.html">Browse Courses</a>
+      </div>
+      <div class="grid features container" style="margin-top:24px">
+        <div class="card"><h3>Structured Lessons</h3><p class="muted">Concise notes aligned to each syllabus with examples.</p></div>
+        <div class="card"><h3>Practice Tests & Mocks</h3><p class="muted">Timed practice with instant feedback and explanations.</p></div>
+        <div class="card"><h3>Study Assistant</h3><p class="muted">Ask questions anytime — get step‑by‑step help.</p></div>
+        <div class="card"><h3>Progress Tracking</h3><p class="muted">Monitor your progress and build study streaks.</p></div>
+        <!-- Last one clickable -->
+        <div class="card link-card">
+          <a href="referral.l.html">
+           <h3>Refer Friends</h3>
+           <p class="muted">Get 10% off by referring friends, and compete with them to earn rewards.</p>
+          </a>       
+        </div>
+        <!-- Last one clickable -->
+        <div class="card link-card">
+          <a href="ptdemo.l.html">
+           <h3>Take a Practice Test Now!</h3>
+           <p class="muted">Take a practice test now and let's know where you are at, so we could study from there.</p>
+          </a>
+        </div>
+      </div>  
+    </div>
+  </header>  <!-- Courses -->  <section id="courses">
+    <div class="container">
+      <h2 class="section-title">Courses & Subjects</h2>
+      <p class="muted">Start with our core subjects. More coming soon.</p>
+      <div class="grid subjects" style="margin-top:16px">
+        <div class="card"><span class="badge">WAEC • JAMB</span><h3>Mathematics</h3><p>Algebra, Functions, Geometry, Probability.</p></div>
+        <div class="card"><span class="badge">WAEC • NECO</span><h3>English Language</h3><p>Comprehension, Summary, Lexis & Structure, Essays.</p></div>
+        <div class="card"><span class="badge">WAEC • JAMB</span><h3>Chemistry</h3><p>Stoichiometry, Equilibrium, Organic, Electrochemistry.</p></div>
+        <div class="card"><span class="badge">WAEC • JAMB</span><h3>Physics</h3><p>Mechanics, Electricity, Waves, Modern Physics.</p></div>
+        <div class="card"><span class="badge">WAEC • NECO</span><h3>Biology</h3><p>Cells, Genetics, Ecology, Physiology.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>  <!-- Lesson Viewer -->  <section id="lessons">
+    <div class="container">
+      <h2 class="section-title">Study Panel</h2>
+      <p class="muted">Pick a topic and study concise notes.</p>
+      <div class="lesson-wrap">
+        <aside class="card lesson-list" id="lessonList">
+          <div class="lesson-item active" data-topic="quadratics">Math: Quadratic Equations</div>
+          <div class="lesson-item" data-topic="photosynthesis">Biology: Photosynthesis</div>
+          <div class="lesson-item" data-topic="acidbase">Chemistry: Acids & Bases</div>
+          <div class="lesson-item" data-topic="ohmslaw">Physics: Ohm's Law</div>
+        </aside>
+        <article class="card lesson-content" id="lessonContent">
+          <!-- Filled by JS -->
+        </article>
+      </div>
+    </div>
+  </section>  <!-- Quiz Center -->  <section id="quiz">
+    <div class="container">
+      <h2 class="section-title">Practice Test</h2>
+      <p class="muted">Take a short practice test. Get instant feedback.</p>
+      <div class="card">
+        <div id="quizBox"></div>
+        <button class="btn primary" id="submitQuiz" style="margin-top:10px">Submit Quiz</button>
+        <div class="quiz-result" id="quizResult"></div>
+      </div>
+    </div>
+  </section>  <!-- Tutor -->  <section id="tutor">
+    <div class="container">
+      <h2 class="section-title">Your Study Assistant</h2>
+      <p class="muted">Ask a question about any topic and get a step-by-step explanation.</p>
+      <div class="card chat">
+        <div class="chat-log" id="chatLog"></div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="e.g., Explain Le Chatelier's principle with an example" />
+          <button id="chatSend">Ask</button>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:8px">Note: This demo uses on-page logic. Connect to your AI backend later for full power.</p>
+    </div>
+  </section>  <!-- Dashboard -->  <section id="dashboard">
+    <div class="container">
+      <h2 class="section-title">Your Progress</h2>
+      <p class="muted">Demo KPIs refresh from your recent practice tests.</p>
+      <div class="grid kpis">
+        <div class="card kpi"><h4>Weekly Study Streak</h4><div class="bar"><i style="width:60%"></i></div><p class="muted">4 days this week</p></div>
+        <div class="card kpi"><h4>Math Mastery</h4><div class="bar"><i id="kpi-math" style="width:40%"></i></div><p class="muted">Based on last quiz</p></div>
+        <div class="card kpi"><h4>Chemistry Mastery</h4><div class="bar"><i id="kpi-chem" style="width:55%"></i></div><p class="muted">Practice more acids & bases</p></div>
+        <div class="card kpi"><h4>Biology Mastery</h4><div class="bar"><i id="kpi-bio" style="width:30%"></i></div><p class="muted">Try photosynthesis quiz</p></div>
+      </div>
+    </div>
+  </section>  <!-- Pricing / Signup -->  <section id="pricing">
+    <div class="container">
+      <h2 class="section-title">Pricing</h2>
+      <p class="muted">Launch promo — start free, upgrade anytime.</p>
+      <div class="grid subjects">
+        <div class="card"><h3>Free</h3><p>• 2 lessons/week<br>• 5 quizzes/week<br>• AI tutor (limited)</p><a class="btn" href="#signup">Start</a></div>
+        <div class="card"><h3>Premium</h3><p>• Unlimited lessons & quizzes<br>• Full AI tutor<br>• Mock exams & reports</p><a class="btn primary" href="#signup">Go Premium</a></div>
+      </div>
+    </div>
+<!-- Footer -->  <section id="footer"></section>     <footer>
+    <div class="container footgrid">
+      <div>
+        <h3>LearnX</h3>
+        <p class="muted">Exam prep for Africa. Designed for results.</p>
+        <p class="copyright">© 2025 LearnX. All rights reserved.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <p><a href="courses.l.html">Courses</a></p>
+        <p><a href="#quiz">Practice Tests</a></p>
+        <p><a href="#tutor">Tutor</a></p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>support@learnx.edu</p>
+        <p><a href="tel:+2348012345678">+234 801 234 5678</a></p>
+      </div>
+    </div>
+  </footer>  <script>
+    /* ---------------- LESSON CONTENT (demo) ---------------- */
+    const lessons = {
+      quadratics: {
+        title: "Math: Quadratic Equations",
+        html: `
+          <h3>Quadratic Equations</h3>
+          <p>A quadratic has the form <em>ax² + bx + c = 0</em>. The solutions are given by the quadratic formula:</p>
+          <pre>x = [-b ± √(b² - 4ac)] / (2a)</pre><p><strong>Example:</strong> Solve x² - 5x + 6 = 0 → (x-2)(x-3)=0 → x=2 or x=3.</p>
+      <p><strong>Exam tip:</strong> Always check the discriminant Δ = b² - 4ac.</p>
+    `
+  },
+  photosynthesis: {
+    title: "Biology: Photosynthesis",
+    html: `
+      <h3>Photosynthesis</h3>
+      <p>Process by which green plants convert carbon dioxide and water to glucose and oxygen using light in chloroplasts.</p>
+      <p>Equation: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ (in presence of light & chlorophyll).</p>
+      <p><strong>Limiting factors:</strong> light intensity, CO₂ concentration, temperature.</p>
+    `
+  },
+  acidbase: {
+    title: "Chemistry: Acids & Bases",
+    html: `
+      <h3>Acids & Bases</h3>
+      <p>Acids donate H⁺; bases accept H⁺ (Brønsted–Lowry). pH = -log[H⁺].</p>
+      <p><strong>Neutralization:</strong> acid + base → salt + water. Use indicators to track end‑point (e.g., phenolphthalein).</p>
+    `
+  },
+  ohmslaw: {
+    title: "Physics: Ohm's Law",
+    html: `
+      <h3>Ohm's Law</h3>
+      <p>V = IR. For a resistor, voltage is proportional to current with resistance R (Ω).</p>
+      <p><strong>Example:</strong> If V=12V and R=4Ω, I=3A.</p>
+    `
+  }
+};
+
+const lessonList = document.getElementById('lessonList');
+const lessonContent = document.getElementById('lessonContent');
+
+function loadLesson(key){
+  [...lessonList.children].forEach(n=>n.classList.remove('active'));
+  const btn = [...lessonList.children].find(n=>n.dataset.topic===key); if(btn) btn.classList.add('active');
+  const {title, html} = lessons[key];
+  lessonContent.innerHTML = `<h2>${title}</h2>${html}`;
+}
+
+lessonList.addEventListener('click', (e)=>{
+  const item = e.target.closest('.lesson-item');
+  if(!item) return; loadLesson(item.dataset.topic);
+});
+
+loadLesson('quadratics');
+
+/* ---------------- QUIZ (demo) ---------------- */
+const quizData = [
+  { id:'q1', q:'Solve x² - 5x + 6 = 0', options:['x=1 or 6','x=2 or 3','x=−2 or −3','No real roots'], correct:1, explain:'(x−2)(x−3)=0 → x=2,3.' },
+  { id:'q2', q:'Which factor does NOT directly affect photosynthesis rate?', options:['Light intensity','CO₂ concentration','Soil type','Temperature'], correct:2, explain:'Soil type is indirect; main factors are light, CO₂, temperature.' },
+  { id:'q3', q:'At 25°C, a solution with [H⁺]=1×10⁻³ M has pH ≈', options:['1','3','7','11'], correct:1, explain:'pH = −log(10⁻³) = 3.' }
+];
+
+function renderQuiz(){
+  const box=document.getElementById('quizBox');
+  box.innerHTML = quizData.map((item, idx)=>`
+    <div class="quiz-item">
+      <div class="quiz-q"><strong>${idx+1}. ${item.q}</strong></div>
+      <div class="quiz-options">
+        ${item.options.map((opt,i)=>`
+          <label><input type="radio" name="${item.id}" value="${i}"> ${opt}</label>
+        `).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function gradeQuiz(){
+  let score=0; let total=quizData.length; let feedback=[];
+  quizData.forEach(item=>{
+    const chosen = document.querySelector(`input[name="${item.id}"]:checked`);
+    const v = chosen? parseInt(chosen.value,10) : -1;
+    if(v===item.correct){ score++; feedback.push(`✔ ${item.q}`); } else { feedback.push(`✖ ${item.q} — ${item.explain}`); }
+  });
+  document.getElementById('quizResult').innerHTML = `Score: ${score}/${total} (${Math.round(100*score/total)}%)<br>${feedback.map(f=>`<div>${f}</div>`).join('')}`;
+  // demo KPI update
+  document.getElementById('kpi-math').style.width = `${Math.max(30, score/total*100)}%`;
+}
+
+renderQuiz();
+document.getElementById('submitQuiz').addEventListener('click', gradeQuiz);
+
+/* ---------------- AI TUTOR (demo) ---------------- */
+const chatLog = document.getElementById('chatLog');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+
+function addBubble(text, who='ai'){
+  const b = document.createElement('div');
+  b.className = `bubble ${who}`;
+  b.innerText = text;
+  chatLog.appendChild(b);
+  chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+function fakeTutorAnswer(q){
+  // Simple templated responses; replace with your backend call
+  q = q.toLowerCase();
+  if(q.includes('quadratic')) return 'For ax²+bx+c=0, use the formula: x = [-b ± √(b²−4ac)]/(2a). Try a=1,b=−5,c=6 → x=2 or 3.';
+  if(q.includes("photosynthesis")) return 'Photosynthesis makes glucose from CO₂ and H₂O using light in chloroplasts. Equation: 6CO₂+6H₂O → C₆H₁₂O₆+6O₂.';
+  if(q.includes('ohm')) return "Ohm's Law: V=IR. If R=6Ω and I=2A, then V=12V.";
+  if(q.includes('acid')||q.includes('base')||q.includes('ph')) return 'Acids donate H⁺; bases accept H⁺. pH=−log[H⁺]. Neutralization gives salt+water.';
+  return 'Great question! Break it down: define the key terms, write the knowns, apply the core formula, and check units. Ask me about any WAEC/JAMB topic!';
+}
+
+chatSend.addEventListener('click', ()=>{
+  const msg = chatInput.value.trim();
+  if(!msg) return; addBubble(msg,'user'); chatInput.value='';
+  setTimeout(()=> addBubble(fakeTutorAnswer(msg),'ai'), 400);
+});
+chatInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ chatSend.click(); }});
+
+// Hamburger toggle
+const hamburger = document.getElementById("hamburger");
+  const navMenu = document.getElementById("navMenu");
+  hamburger.addEventListener("click", () => {
+    navMenu.classList.toggle("show");
+});
+
+/* ---------------- PAYMENTS (placeholder) ---------------- */
+// To enable real payments, include the gateway script and trigger on signup:
+// Paystack example:
+// <script src="https://js.paystack.co/v1/inline.js"></script>
+// function pay(){
+//   var handler = PaystackPop.setup({
+//     key: 'pk_test_xxx', email: 'student@email.com', amount: 700000, currency:'NGN',
+//     callback: function(resp){ /* verify on backend, then activate account */ },
+//     onClose: function(){ alert('Payment closed'); }
+//   }); handler.openIframe();
+// }
+
+  </script>
+</body>
+</html>

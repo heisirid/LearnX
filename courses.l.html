@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnX Exams</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f8fafc; padding:20px; }
+    .container { max-width: 1080px; margin: auto; }
+    .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filters input, .filters select {
+      padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;
+      flex: 1;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card {
+      background:#fff; padding:16px; border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      text-decoration: none; color: inherit; display: block;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+    }
+    .badge { display:inline-block; background:#eef2ff; color:#4e54c8; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:bold; }
+    .card h3 { margin:10px 0 6px; color:#1f2937; }
+    .card p { margin:0; color:#555; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Exams Across Africa & International</h1>
+
+    <!-- Filters -->
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="🔍 Search exam or subject...">
+      <select id="regionFilter">
+        <option value="">🌍 All Regions</option>
+        <option value="west africa">West Africa</option>
+        <option value="east africa">East Africa</option>
+        <option value="tanzania">Tanzania</option>
+        <option value="rwanda">Rwanda</option>
+        <option value="ethiopia">Ethiopia</option>
+        <option value="south africa">South Africa</option>
+        <option value="zimbabwe">Zimbabwe</option>
+        <option value="north africa">North Africa</option>
+        <option value="international">International</option>
+      </select>
+    </div>
+
+    <!-- Exam Grid -->
+    <div class="grid" id="examGrid">
+      <a href="waec.html" class="card"><span class="badge">West Africa • WAEC</span><h3>West African Examination Council</h3><p>Mathematics, English, Chemistry, Physics</p></a>
+      <a href="neco.html" class="card"><span class="badge">West Africa • NECO</span><h3>National Examination Council</h3><p>Mathematics, English, Biology, Government</p></a>
+      <a href="jamb.html" class="card"><span class="badge">West Africa • JAMB (UTME)</span><h3>Joint - Admission Matriculation Board</h3><p>Mathematics, English, Chemistry, Physics</p></a>
+      <a href="bece.html" class="card"><span class="badge">West Africa • BECE</span><h3>Basic Education Certificate Examination</h3><p>Mathematics, English, Social Studies, Integrated Science</p></a>
+      <a href="kcse.html" class="card"><span class="badge">East Africa • KCSE</span><h3>Subjects</h3><p>Mathematics, English, Biology, Chemistry</p></a>
+      <a href="kcpe.html" class="card"><span class="badge">East Africa • KCPE</span><h3>Subjects</h3><p>Mathematics, English, Kiswahili, Science</p></a>
+      <a href="uce.html" class="card"><span class="badge">East Africa • UCE</span><h3>Subjects</h3><p>Mathematics, English, Physics, Geography</p></a>
+      <a href="uace.html" class="card"><span class="badge">East Africa • UACE</span><h3>Subjects</h3><p>Mathematics, Biology, Economics, Chemistry</p></a>
+      <a href="csee.html" class="card"><span class="badge">Tanzania • CSEE</span><h3>Subjects</h3><p>Mathematics, English, Physics, Chemistry</p></a>
+      <a href="acsee.html" class="card"><span class="badge">Tanzania • ACSEE</span><h3>Subjects</h3><p>Mathematics, Physics, Chemistry, Biology</p></a>
+      <a href="rwanda.html" class="card"><span class="badge">Rwanda • Senior 6 Exams</span><h3>Subjects</h3><p>Mathematics, Biology, Chemistry, History</p></a>
+      <a href="eheee.html" class="card"><span class="badge">Ethiopia • EHEEE</span><h3>Subjects</h3><p>Mathematics, English, Biology, Chemistry</p></a>
+      <a href="nsc.html" class="card"><span class="badge">South Africa • NSC (Matric)</span><h3>Subjects</h3><p>Mathematics, English, Life Sciences, Physical Sciences</p></a>
+      <a href="zimsec.html" class="card"><span class="badge">Zimbabwe • ZIMSEC A-Level</span><h3>Subjects</h3><p>Mathematics, English, Biology, History</p></a>
+      <a href="thanaweya.html" class="card"><span class="badge">North Africa • Thanaweya Amma (Egypt)</span><h3>Subjects</h3><p>Mathematics, Physics, Chemistry, Biology</p></a>
+      <a href="baccalaureat.html" class="card"><span class="badge">North Africa • Baccalauréat</span><h3>Subjects</h3><p>Mathematics, French, Physics, History</p></a>
+      <a href="igcse.html" class="card"><span class="badge">International • IGCSE</span><h3>Subjects</h3><p>Mathematics, English, Physics, Chemistry</p></a>
+      <a href="ib.html" class="card"><span class="badge">International • IB Diploma</span><h3>Subjects</h3><p>Mathematics, English, Biology, Chemistry</p></a>
+      <a href="sat.html" class="card"><span class="badge">International • SAT</span><h3>Subjects</h3><p>Mathematics, English (Reading & Writing)</p></a>
+      <a href="ielts.html" class="card"><span class="badge">International • IELTS / TOEFL</span><h3>Subjects</h3><p>Reading, Writing, Listening, Speaking</p></a>
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const regionFilter = document.getElementById("regionFilter");
+    const cards = document.querySelectorAll(".card");
+
+    function filterCards() {
+      const query = searchInput.value.toLowerCase();
+      const region = regionFilter.value.toLowerCase();
+
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        const matchesSearch = text.includes(query);
+        const matchesRegion = region === "" || text.includes(region);
+
+        card.style.display = matchesSearch && matchesRegion ? "block" : "none";
+      });
+    }
+
+    searchInput.addEventListener("input", filterCards);
+    regionFilter.addEventListener("change", filterCards);
+  </script>
+</body>
+</html>

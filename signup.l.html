@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LearnX - Signup</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Create Account</h2>
+    <form id="signupForm">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="text" id="ref" placeholder="Referral code">
+      <select id="role" required>
+        <option value="student">Student</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button type="submit">Signup</button>
+    </form>
+    <p>Already have an account? <a href="login.l.html">Login</a></p>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
